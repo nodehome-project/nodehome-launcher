@@ -117,7 +117,6 @@
 		  <input type="hidden" name="cnetwork" value="debugnet" />
 		  <div style="width:100%;border:1px solid #F5ECDC;border-radius: 5px;padding:10px 10px 25px 10px;background:#FFFCF7;word-wrap: break-word;">
 		  	<h4>NodeHome COIN Faucet </h4>
-		  	<p>Free COIN (BON) every 1 Day</p>
 		  		<br/><br/>
 			  <div class="form-group">
 			    <label for="name">User wallet</label>

@@ -142,6 +142,9 @@ response.setContentType("text/html; charset=utf-8");
 		},10);
 	}
 
+	function goMain() {
+		location.href="/launcher";
+	}
 	</script>
 </head>
 
@@ -189,7 +192,7 @@ response.setContentType("text/html; charset=utf-8");
                                 <a class="nav-link" href="#pablo">
                                     <i class="now-ui-icons media-2_sound-wave"></i>
                                     <p>
-                                        <span class="d-lg-none d-md-block" onclick="history.back();">닫기</span>
+                                        <span class="d-lg-none d-md-block" onclick="goMain();">닫기</span>
                                     </p>
                                 </a>
                             </li>
