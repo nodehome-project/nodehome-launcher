@@ -60,7 +60,7 @@
 	    
 	 	// 서비스 앱 초기화 
 		AWI_setTerminatePath('/launcher');
-		//AWI_closeServiceApp();	
+		AWI_closeServiceApp();	
 		 
 		if(!isLoding) {	// slidePro때문에 AWI_OnLoadFromApp()가 두번이상 호출되는 문제
 		    j_curWID = AWI_getAccountConfig("CUR_WID");
@@ -239,7 +239,7 @@
 			$('#menu-box').animate({ top : "50px" }, 300);
 		} else {
 			$('#netIdDiv').hide();
-			$('#menu-box').animate({ top : "-500px" }, 300);
+			$('#menu-box').animate({ top : "-420px" }, 300);
 		}
 	}
 	
@@ -481,7 +481,6 @@
 		location.href="/index";	
 	}
 	
-	
 </script>
 
 </head>
@@ -515,8 +514,7 @@
 	
 	</script>
 	
-	<div id="menu-box" style="position:absolute;right:0px;top:-500px;width:100%;background-color:#424242;padding:10px;color:#000;z-index:800;">
-		<li id="goHostBtn" style="display:none;" onclick="javascript:Fn_openLocation();"><i class="fas fa-location-arrow"></i> 호스트 가기</li>
+	<div id="menu-box" style="position:absolute;right:0px;top:-420px;width:100%;background-color:#424242;padding:10px;color:#000;z-index:800;">
 		<li onclick="javascript:loadManagerBox();"><i class="fas fa-user-cog"></i> 바탕화면 관리</li>
 		<li onclick="javascript:Fn_faucet();"><i class="fas fa-coins"></i> 무료 충전</li>
 		<li onclick="javascript:Fn_goServiceList();"><i class="fas fa-search-plus"></i> 서비스 검색</li>
@@ -528,6 +526,7 @@
 		<li onclick="javascript:AWI_showSettingView();"><i class="fas fa-cog"></i> 설정</li>
 		<li onclick="javascript:Fn_addNewServiceForm();"><i class="fas fa-cog"></i> 새서비스추가</li>
 		<li onclick="javascript:Fn_actionWalletPage();"><i class="fas fa-cog"></i> 지갑 서비스</li>
+		<li id="goHostBtn" style="display:none;" onclick="javascript:Fn_openLocation();"><i class="fas fa-location-arrow"></i> 호스트 가기</li>
 		<li onclick="javascript:AWI_logout();"><i class="fas fa-sign-out-alt"></i> 로그아웃</li> 
 		<li onclick="javascript:changeMainMenu(false);"><i class="fas fa-times" style="padding-left:9px;"></i> 메뉴 닫기</li> 
 	</div> 

@@ -220,11 +220,6 @@ System.out.println("wid : "+strAWID);
 	    	location.href="/svm/wallet/myTransHistory";
 		}	
 		
-		// Add new service
-	    function fnAddService() {
-	    	location.href="/svm/service/addServiceForm";
-		}	
-		
 	    function fnLogout() {
 	    	AWI_logout();
 		}
@@ -391,7 +386,7 @@ System.out.println("wid : "+strAWID);
                   </div>
                 </div>
               </div>
-            </div>            
+            </div>
           </div>
           
           

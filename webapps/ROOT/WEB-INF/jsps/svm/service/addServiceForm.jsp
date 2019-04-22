@@ -12,7 +12,6 @@
 <%@ page import="io.nodehome.cmm.service.GlobalProperties"%>
 <%@ page import="io.nodehome.svm.common.biz.ApiHelper"%>
 
-
 <%
 request.setCharacterEncoding("utf-8");
 response.setContentType("text/html; charset=utf-8");
@@ -45,6 +44,10 @@ localServiceHost = localServiceHost.replaceAll(request.getRequestURI(),"");
     <script src="/js/loader.js"></script>
     <script src="/js/tapp_interface.js"></script>
     <script src="/js/common.js"></script>
+    
+	<link rel="stylesheet" href="/css/jquery-confirm.min.css">
+	<script src="/js/jquery-confirm.min.js"></script>
+	
 	<script>
 	$.ajaxSetup({ async:false }); // AJAX calls in order
 	
@@ -113,114 +116,67 @@ localServiceHost = localServiceHost.replaceAll(request.getRequestURI(),"");
 		var pWalletId = j_curWID;
 
 	    var transferContent = "add service";
-	    var serviceRegFee =  "<%=serviceFeeB%>";
+	    var serviceRegFee =  parseInt("<%=serviceFeeB%>");
 	    var sServiceName = document.getElementById ("s_service_name").value;
 	    var sServiceMemo = document.getElementById ("s_service_memo").value;
 	    sServiceMemo = sServiceMemo.replace(/(?:\r\n|\r|\n)/g, '<br/>');
 
 	    if(sServiceName=="") {alert('<spring:message code="service.require.alert1" />');return;}
 	    if(sServiceMemo=="") {alert('<spring:message code="service.require.alert4" />');return;}
-	    
 	    if (eval(serviceRegFee) > eval(myBalance)) {
-	    	alertMassage('<spring:message code="service.msg.nobalance" /> '+serviceRegFee+' <%=CoinListVO.getCoinCou()%>'); // error
+	    	$.alert('<spring:message code="service.msg.nobalance" /> '+serviceRegFee+' <%=CoinListVO.getCoinCou()%>'); // error
 	    	return false;
 	    }
 	    
 	    var result = confirm("<spring:message code="service.msg.remitSubmit" /> " +(parseInt(serviceRegFee)/1000)+ " <%=CoinListVO.getCoinCou()%>");
-		$('#loading').css('display','block');
+	    if(result) {
+			$('#loading').css('display','block');
 
-		setTimeout(function () {
-			if (result) {
-				// ************ step1 : get Nonce / SVM API
-				var sQuery = {"pid":"PID", "ver":"10000", "cType":"<%=ApiHelper.EC_CHAIN%>", "serviceId":"<%=projectServiceid%>"};
-				var retData = WSI_callJsonAPI("/svm/common/getNonce", sQuery);
-				if(retData['result'] == "OK") {
-					sNonce = retData['nonce'];
-					sNpid = retData['npid'];
-				} else {
-					$('#loading').css('display','none');
-					return false;
-				}
-				
-				// ************ step2 : get Signature / S-T API
-				// The input data is user defined and designed.
-				sQuery = ["PID","10000","{\"sOwner\":\""+pWalletId+"\",\"ServiceName\":\""+sServiceName+"\",\"ServiceMemo\":\""+sServiceMemo+"\"}",sNonce];
-				var sigRes = AWI_getSignature(pWalletId, sQuery,"query","reserveRegisterService");
-				
-				if(sigRes['result']=="OK") {
-					sSig = sigRes['signature_key'];	
-				}
-
-				var serviceId = "";
-				var reserveId = "";
-				var fee = "";
-				// ************ step3 : get TransHistory / SVM API
-				sQuery = {"npid":sNpid, "serviceId":"<%=projectServiceid%>", "parameterArgs" : ["PID","10000","{\"sOwner\":\""+pWalletId+"\",\"ServiceName\":\""+sServiceName+"\",\"ServiceMemo\":\""+sServiceMemo+"\"}",sNonce,sSig,pWalletId]};
-				retData = WSI_callJsonAPI("/svm/service/reserveRegisterService", sQuery);	// Generate nonce for remittance
-				sNonce = "";
-				if(retData['result'] == "OK") {
-					serviceId = retData['service_id'];
-					reserveId = retData['reserve_id'];
-					fee = retData['fee'];
-
-					// ************ step1 : get Nonce / SVM API
+			setTimeout(function () {
+				if (result) {
 					var sQuery = {"pid":"PID", "ver":"10000", "cType":"<%=ApiHelper.EC_CHAIN%>", "serviceId":"<%=projectServiceid%>"};
 					var retData = WSI_callJsonAPI("/svm/common/getNonce", sQuery);
 					if(retData['result'] == "OK") {
 						sNonce = retData['nonce'];
+						sNpid = retData['npid'];
 					} else {
 						$('#loading').css('display','none');
 						return false;
 					}
-
-					// ************ step2 : get Signature / S-T API
-					// The input data is user defined and designed.
-					sQuery = ["PID","10000","1",sNonce];
-					var sigRes = AWI_getSignature(pWalletId, sQuery,"query","getNTransHistory");
+					
+					sQuery = ["PID","10000","{\"sOwner\":\""+pWalletId+"\",\"ServiceName\":\""+sServiceName+"\",\"ServiceMemo\":\""+sServiceMemo+"\"}",sNonce];
+					var sigRes = AWI_getSignature(pWalletId, sQuery,"invoke","registerService");
 					
 					if(sigRes['result']=="OK") {
-						sSig = sigRes['signature_key'];	
-
-						// ************ step3 : get TransHistory / SVM API
-						sQuery = {"npid":sNpid, "serviceId":"<%=projectServiceid%>", "parameterArgs" : ["PID","10000","1",sNonce,sSig,pWalletId]};
-						retData = WSI_callJsonAPI("/svm/common/getNTransHistory", sQuery);	// Generate nonce for remittance
-						sNonce = "";
-						if(retData['result'] == "OK") {
-							sNonce = retData['nonce'];
-							sNpid = retData['npid'];
-						} else {
-							$('#loading').css('display','none');
-							return false;
-						}
-
-						// ************ step4 : get Signature / S-T API
-						sQuery = ["PID", "10000", fee, reserveId, "Add New Service", sNonce];
-						var sigRes = AWI_getSignature(pWalletId, sQuery,"invoke","payFeeForReserve");
-
-						if(sigRes['result']=="OK") {
-							sSig = sigRes['signature_key'];	
-
-							// ************ step5 : create transaction / SVM API
-							var sArgs = ["PID","10000",fee, reserveId, "Add New Service",sNonce,sSig,pWalletId];
-							sQuery = {"requestUrl":"<%=GlobalProperties.getProperty("project_seedHost")%>/createService", "npid":sNpid, "addServiceId":serviceId, "addServiceName":sServiceName, "serviceId":"<%=projectServiceid%>", "parameterArgs" : sArgs};
-							retData = WSI_callCorsJsonAPI(sQuery);
-							if (retData['result'] == "OK") {
-								alert('<spring:message code="service.msg.add.complete" /> '+retData['serviceId']);
-								history.back();
-				            } else {
-								$('#loading').css('display','none');
-				            	alertMassage("<spring:message code="gtoken.msg.writeError" />("+joRes['strValue']+")");
-				            	return false;
-				            }
-						}
+						sSig = sigRes['signature_key'];
 					}
+
+					var sArgs = ["PID","10000","{\\\"sOwner\\\":\\\""+pWalletId+"\\\",\\\"ServiceName\\\":\\\""+sServiceName+"\\\",\\\"ServiceMemo\\\":\\\""+sServiceMemo+"\\\"}",sNonce,sSig,pWalletId];
+					sQuery = {"requestUrl":"<%=GlobalProperties.getProperty("project_seedHost")%>/createService", "npid":sNpid, "addServiceName":sServiceName, "serviceId":"<%=projectServiceid%>", "parameterArgs" : sArgs};
+					retData = WSI_callCorsJsonAPI(sQuery);
+					if (retData['result'] == "OK") {
+						$.alert({
+							    title: '안내',
+							    content: "<spring:message code="service.msg.add.complete" /> "+retData['serviceId'],
+							    confirm: function(){
+							    },
+							    onClose: function(){
+									history.back();
+							    },
+						});
+		            } else {
+						$('#loading').css('display','none');
+						$.alert("처리중 오류가 발생했습니다.("+joRes['strValue']+")");
+		            	return false;
+		            }
+					
 				} else {
+					$.alert("처리중 오류가 발생했습니다.");
+					$('#loading').css('display','none');
 					return false;
 				}
-			} else {
-				return false;
-			}
-		},10);
+			},10);
+	    }
 		
 	}
 	

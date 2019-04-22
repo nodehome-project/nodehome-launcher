@@ -17,7 +17,7 @@
 	    
 		var chk = AWI_isCheckedPassword();
 		if(chk=="OK") {
-			location.href="/launcher";			
+			location.href="/launcher";
 		} else {
 			location.href="/user/login";
 		}

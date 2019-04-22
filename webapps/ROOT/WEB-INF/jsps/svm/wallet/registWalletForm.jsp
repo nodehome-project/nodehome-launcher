@@ -17,7 +17,6 @@
 <%@ page import="java.util.Date" %>
 <%@ page import="java.util.TimeZone" %>
 <%@ page import="java.text.SimpleDateFormat" %>
-
 <%
 request.setCharacterEncoding("utf-8");
 response.setContentType("text/html; charset=utf-8");
@@ -51,6 +50,10 @@ String projectServiceid = GlobalProperties.getProperty("project_serviceid");
     <script src="/js/loader.js"></script>
     <script src="/js/tapp_interface.js"></script>
     <script src="/js/common.js"></script>
+    
+	<link rel="stylesheet" href="/css/jquery-confirm.min.css">
+	<script src="/js/jquery-confirm.min.js"></script>
+	
 	<script>
 	$.ajaxSetup({ async:false }); // AJAX calls in order
 	
@@ -74,12 +77,14 @@ String projectServiceid = GlobalProperties.getProperty("project_serviceid");
 
 		j_curANM = AWI_getAccountConfig("ACCOUNT_NM");
 		j_regWID = "<%=sWid%>";
-		j_regWNM = AWI_getConfig(j_regWID);	
+		j_regWNM = AWI_getAccountConfig(j_regWID);	
 	
 		document.getElementById("s_account_name").value = j_curANM;
 
 		document.getElementById("wallet_id").value = j_regWID;
 		document.getElementById("wallet_name").value = j_regWNM;
+		
+		myBalance = getBalance(j_regWID);
 	}
 
 	function getBalance(pWalletId) {
@@ -122,15 +127,18 @@ String projectServiceid = GlobalProperties.getProperty("project_serviceid");
 	function FnAddWallet() {
 		var sNonce = "";
 		var sNpid = "";
-		
+		var feeRegWallet = parseInt("<%=CoinListVO.getWalletRegFee()%>");
 		var pWalletId = j_regWID;
 
-	    // createTrans : s
+		if(myBalance < feeRegWallet) {
+			$.alert('잔액이 부족합니다.');
+			return false;
+		}
+		
 	    var result = confirm("<spring:message code="wallet.msg.addchain" /> (<spring:message code="title.fee" /> : <%=CoinUtil.calcDisplayCoin(Double.parseDouble(CoinListVO.getWalletRegFee()))%> <%=CoinListVO.getCoinCou()%>)");
 		$('#loading').css('display','block');
-
+		
 		setTimeout(function () {
-				
 			if (result) {
 				var walletNm = frm.wallet_name.value;
 				var owner = frm.nickname.value;
@@ -139,8 +147,9 @@ String projectServiceid = GlobalProperties.getProperty("project_serviceid");
 				
 				var sArgs = ["PID","10000",walletNm,owner,dailyTrLimit,regMemo];
 				var displayParam = [];
-				AWI_runTransaction("registWallet", sArgs, "FnCallBackRegistWallet", "지갑등록확인", "지갑등록확인", displayParam, j_regWID);
+				AWI_runTransaction("registerWallet", sArgs, "FnCallBackRegistWallet", "지갑등록확인", "지갑등록확인", displayParam, j_regWID, feeRegWallet);
 			} else {
+				$('#loading').css('display','hide');
 				return false;
 			}
 		}, 10);
@@ -203,7 +212,7 @@ String projectServiceid = GlobalProperties.getProperty("project_serviceid");
 				</div>
 				
 			    <div class="form-group">
-					<input type="text" name="daily_tr_limit" id="daily_tr_limit" class="form-control input-lg" placeholder="<spring:message code="body.text.daily.transfer.limits" />" value="<%if(maxRemittance==0) { out.print(1000000); } else { out.print(maxRemittance); }%>"/>
+					<input type="text" name="daily_tr_limit" id="daily_tr_limit" class="form-control input-lg" placeholder="<spring:message code="body.text.daily.transfer.limits" />" value="<%if(maxRemittance==0) { out.print("1000000000000"); } else { out.print(maxRemittance); }%>"/>
 				</div>
                 
 			    <div class="form-group">

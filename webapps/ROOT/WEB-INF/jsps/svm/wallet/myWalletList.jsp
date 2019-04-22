@@ -16,7 +16,6 @@
 <%@ page import="java.text.*" %>
 <%@ page import="java.util.List" %>
 
-
 <%
 request.setCharacterEncoding("utf-8");
 response.setContentType("text/html; charset=utf-8");
@@ -69,13 +68,11 @@ String projectServiceid = GlobalProperties.getProperty("project_serviceid");
 	var walletList = null;
 	// Function to call as soon as it is loaded from the App
 	function AWI_OnLoadFromApp(dtype) {
-		 // Activate AWI_XXX method
-		 AWI_ENABLE = true;
-		 AWI_DEVICE = dtype;
-		 
-		 j_curWID = AWI_getAccountConfig("CUR_WID");
-		 j_curWNM = AWI_getAccountConfig(j_curWID);
+		// Activate AWI_XXX method
+		AWI_ENABLE = true;
+		AWI_DEVICE = dtype;
 
+		j_curWID = AWI_getAccountConfig("CUR_WID");
 		$('#loading').css('display','block');
 
 		setTimeout(function () {
@@ -87,11 +84,11 @@ String projectServiceid = GlobalProperties.getProperty("project_serviceid");
 				walletList = sResult['list'];
 		    	var sHTML="";
 		    	var elmtTBody = $('#id_walletlist_table_tbody');
+		    	
 		    	for(var i=0; i < walletList.length ; i ++) {
 		    		var vBalance = getBalance(walletList[i]['walletId']);
 		    		if(vBalance!="") {
 			    		var wallerNm = AWI_getAccountConfig(walletList[i]['walletId']);	
-
 			    		var walletRegisted = false;
 			    		var configChk = AWI_getAccountConfig("REG_"+walletList[i]['walletId']);
 			    		if(configChk=="") {
@@ -385,14 +382,14 @@ String projectServiceid = GlobalProperties.getProperty("project_serviceid");
           
 			<hr class="colorgraph">
 			<div class="row">
-				<div class="col-12"><input type="button" value="<spring:message code="user.button.selectWallet" />" class="btn btn-success btn-lg btn-block" onclick="FnSelectWallet();" /></div>
+				<div class="col-12"><input type="button" value="<spring:message code="user.button.selectWallet" />" class="btn btn-success  btn-block" onclick="FnSelectWallet();" /></div>
 			</div>
 			<div class="row">
-				<div class="col-6"><input type="button" value="<spring:message code="user.button.deleteWallet" />" class="btn btn-warning btn-lg btn-block" onclick="FnDeleteWallet();" /></div>
-				<div class="col-6"><input type="button" value="<spring:message code="user.button.addUpdateWallet" />" class="btn btn-warning btn-lg btn-block" onclick="FnAddWallet();" /></div>
+				<div class="col-6"><input type="button" value="<spring:message code="user.button.deleteWallet" />" class="btn btn-warning  btn-block" onclick="FnDeleteWallet();" /></div>
+				<div class="col-6"><input type="button" value="<spring:message code="user.button.addUpdateWallet" />" class="btn btn-warning  btn-block" onclick="FnAddWallet();" /></div>
 			</div>
 			<div class="row">
-				<div class="col-12"><input type="button" value="<spring:message code="user.button.wallet.block.use" />" class="btn btn-warning btn-lg btn-block" onclick="FnBlockUseWallet();" /></div>
+				<div class="col-12"><input type="button" value="<spring:message code="user.button.wallet.block.use" />" class="btn btn-warning  btn-block" onclick="FnBlockUseWallet();" /></div>
 			</div>
 			<div style="padding-bottom:20px;"></div>
 				

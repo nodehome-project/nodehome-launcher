@@ -51,7 +51,7 @@
 	            	if(res['result']=="OK") {
 		    			$.alert({
 		    				    title: '안내',
-		    				    content: "10,000,000BON이 전송되었습니다.",
+		    				    content: "2,000,000BON이 전송되었습니다.",
 		    				    confirm: function(){
 		    				    },
 		    				    onClose: function(){
@@ -117,12 +117,13 @@
 		  <input type="hidden" name="cnetwork" value="debugnet" />
 		  <div style="width:100%;border:1px solid #F5ECDC;border-radius: 5px;padding:10px 10px 25px 10px;background:#FFFCF7;word-wrap: break-word;">
 		  	<h4>NodeHome COIN Faucet </h4>
-		  		<br/>
+		  	<p>Free COIN (BON) every 1 Day</p>
+		  		<br/><br/>
 			  <div class="form-group">
 			    <label for="name">User wallet</label>
 			    <input type="text" class="form-control" name="walletName2" id="walletName2" placeholder="Wallet ID" value=""/>
 			    <br/><br/>
-			    <button type="button" class="btn btn-primary" onclick="FnTransferCoin()">request 10,000,000BON from faucet</button>
+			    <button type="button" class="btn btn-primary" onclick="FnTransferCoin()">request 2,000,000BON from faucet</button>
 			  </div>
 		  
 		  </div>

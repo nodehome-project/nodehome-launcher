@@ -366,7 +366,7 @@ function AWI_getServiceList() {
 	return joReturn;
 }
 
-function AWI_runTransaction(transType, jaArgs, callbackFunc, displayTitle, displayDesc, displayParam, walletId) {
+function AWI_runTransaction(transType, jaArgs, callbackFunc, displayTitle, displayDesc, displayParam, walletId, fee) {
 	var sReturn = "{ \"result\":\"FAIL\" , \"value\":{} }"
 	if(!AWI_ENABLE) return;
 	var joCmd = null;
@@ -378,6 +378,7 @@ function AWI_runTransaction(transType, jaArgs, callbackFunc, displayTitle, displ
 	params['displayDesc'] = displayDesc;
 	params['displayArgs'] = displayParam;
 	params['walletId'] = walletId;
+	params['displayFee'] = fee;
 	params['args'] = jaArgs;
 	joCmd = {func:params};
 	if(AWI_DEVICE == 'ios') {

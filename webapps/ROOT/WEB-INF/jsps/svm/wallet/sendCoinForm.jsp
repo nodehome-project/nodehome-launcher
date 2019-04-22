@@ -222,7 +222,7 @@ String minRemittance = CoinUtil.calcDisplayCoin(Double.parseDouble(CoinListVO.ge
 		    
 			var sArgs = ["PID","10000",pWalletId,j_qrCodeValue,"R",remittanceAmount,transferContent,withdrawMemo,depositMemo];
 			var displayParam = [];
-			AWI_runTransaction("sendCoin", sArgs, "FnCallBackTransferCoin", "송금확인", "", displayParam, j_curWID);
+			AWI_runTransaction("sendCoin", sArgs, "FnCallBackTransferCoin", "송금확인", "", displayParam, j_curWID, 0);
 		}, 10);
 	}
 	
