@@ -23,7 +23,9 @@
 
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
-<link href="/css/style.css" rel="stylesheet" />
+
+<link href="/css/style.css" rel="stylesheet"/>
+<link href="/css/loading.css" rel="stylesheet"/>
 	
 <link rel="stylesheet" href="/css/jquery-confirm.min.css">
 <script src="/js/jquery-confirm.min.js"></script>
@@ -179,6 +181,11 @@
 		}
 		displayServices(serviceList);
 	}
+	
+	function FnOpenServiceApp(pServiceId) {
+		$('#loading').show();
+		AWI_openServiceApp(pServiceId);
+	}
 
 	function displayServices(serviceList) {
 		$('.sp-slides').html("");
@@ -193,7 +200,7 @@
 				for(var i2=0; i2<serviceList[i].length; i2++) {
 					var tempObj = JSON.parse(serviceList[i][i2]);
 					sHtml += '		<div class="col-xs-6 col-sm-6" style="text-align:center;padding:5px;" id="sp-col-'+i+'-'+i2+'">';
-					sHtml += '			<img src="'+localHost+'/'+imageFolder+'/'+tempObj['serviceId']+'/icon.png" width=80 height=80 style="border-radius:25px;"  onclick="javascript:AWI_openServiceApp(\''+tempObj['serviceId']+'\');" /><br/>';
+					sHtml += '			<img src="'+localHost+'/'+imageFolder+'/'+tempObj['serviceId']+'/icon.png" width=80 height=80 style="border-radius:25px;"  onclick="javascript:FnOpenServiceApp(\''+tempObj['serviceId']+'\');" /><br/>';
 					sHtml += '			<div style="height:50px;">';
 					if(tempObj['defaultCheck']=="true") { 
 						sHtml += '			<input type="checkbox" class="serviceChkBox" name="serviceValue" value="'+(i+1)+'|'+(i2+1)+'|'+tempObj['serviceId']+'|'+tempObj['serviceName']+'" checked style="display:none;" />';
@@ -486,6 +493,12 @@
 </head>
 
 <body leftmargin=0 topmargin=0>
+	<div id="loading" class="loading" style="display:none;"><div class="loading-icon">
+	  <div class="loading-bar"></div>
+	  <div class="loading-bar"></div>
+	  <div class="loading-bar"></div>
+	  <div class="loading-bar"></div>
+	</div></div>
 
 	<script>
 	function Fn_openNetOption() {
