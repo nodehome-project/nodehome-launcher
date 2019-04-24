@@ -243,7 +243,6 @@ function AWI_getLocalHttpHost() {
 	var params = new Object();
 	params['cmd'] = "getLocalHttpHost";
 	joCmd = {func:params};
-	sReturn =  window.AWI.callAppFunc(JSON.stringify(joCmd));	
 
 	if(AWI_DEVICE == 'ios') {
 		sReturn =  prompt(JSON.stringify(joCmd));	
