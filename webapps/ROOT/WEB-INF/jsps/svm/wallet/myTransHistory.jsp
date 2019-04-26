@@ -12,6 +12,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Date" %>
 
+<%@ include file="/inc/alertMessage.jsp" %>
 <%
 request.setCharacterEncoding("utf-8");
 response.setContentType("text/html; charset=utf-8");
@@ -176,6 +177,7 @@ if(edate==null) edate=today;
 		var retData = WSI_callJsonAPI("/svm/common/getNonce", sQuery);
 		if(retData['result'] == "OK") {
 			sNonce = retData['nonce'];
+			sNpid = retData['npid'];
 		} else {
 			return false;
 		}
@@ -185,13 +187,13 @@ if(edate==null) edate=today;
 		eddt = (getTimestampFromDatetime(eddt+" 23:59") / 1000) + "";
 		
 		// ************ step2 : get Signature / S-T API
-		sQuery = ["PID","10000",stdt,eddt,"N",((pageIndex-1)*listCount)+"",listCount+"",sNonce];
+		sQuery = ["PID","10000",stdt,eddt,"Y",((pageIndex-1)*listCount)+"",listCount+"",sNonce];
 		var sigRes = AWI_getSignature(pWalletId, sQuery,"query","getTransHistory");
 		if(sigRes['result']=="OK") {
-			sSig = sigRes['signature_key'];	
+			sSig = sigRes['signature_key'];
 			
 			// ************ step3 : get TransHistory / SVM API
-			sQuery = {"npid":sNpid, "parameterArgs" : ["PID","10000",stdt,eddt,"N",((pageIndex-1)*listCount)+"",listCount+"",sNonce,sSig,pWalletId]};
+			sQuery = {"npid":sNpid, "parameterArgs" : ["PID","10000",stdt,eddt,"Y",((pageIndex-1)*listCount)+"",listCount+"",sNonce,sSig,pWalletId]};
 			retData = WSI_callJsonAPI("/svm/wallet/getTransHistory", sQuery);		// Transaction history API call
 			if(retData['result'] == "OK") {
 				return retData['value'];
@@ -213,6 +215,7 @@ if(edate==null) edate=today;
 		var retData = WSI_callJsonAPI("/svm/common/getNonce", sQuery);
 		if(retData['result'] == "OK") {
 			sNonce = retData['nonce'];
+			sNpid = retData['npid'];
 		} else {
 			return false;
 		}
