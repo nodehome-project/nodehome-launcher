@@ -202,7 +202,12 @@
 				for(var i2=0; i2<serviceList[i].length; i2++) {
 					var tempObj = JSON.parse(serviceList[i][i2]);
 					sHtml += '		<div class="col-xs-6 col-sm-6" style="text-align:center;padding:5px;" id="sp-col-'+i+'-'+i2+'">';
-					sHtml += '			<img src="'+localHost+'/'+imageFolder+'/'+tempObj['serviceId']+'/icon.png" width=80 height=80 style="border-radius:25px;"  onclick="javascript:FnOpenServiceApp(\''+tempObj['serviceId']+'\');" /><br/>';
+
+					if(AWI_DEVICE == 'windows') 
+						sHtml += '			<img src="file:///'+(imageFolder)+'/'+tempObj['serviceId']+'/icon.png" width=80 height=80 style="border-radius:25px;"  onclick="javascript:FnOpenServiceApp(\''+tempObj['serviceId']+'\');" /><br/>';
+					else
+						sHtml += '			<img src="'+localHost+'/'+imageFolder+'/'+tempObj['serviceId']+'/icon.png" width=80 height=80 style="border-radius:25px;"  onclick="javascript:FnOpenServiceApp(\''+tempObj['serviceId']+'\');" /><br/>';
+
 					sHtml += '			<div style="height:50px;">';
 					if(tempObj['defaultCheck']=="true") { 
 						sHtml += '			<input type="checkbox" class="serviceChkBox" name="serviceValue" value="'+(i+1)+'|'+(i2+1)+'|'+tempObj['serviceId']+'|'+tempObj['serviceName']+'" checked style="display:none;" />';
