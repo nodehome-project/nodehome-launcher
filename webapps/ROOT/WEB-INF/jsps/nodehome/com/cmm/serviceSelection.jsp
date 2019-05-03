@@ -159,7 +159,7 @@ response.setContentType("text/html; charset=utf-8");
 	<form name="frm" id="frm" method="post" onsubmit="return false;" class="form-horizontal">
 	<input type="hidden" name="serviceIds" value="${serviceIds }" />
     <div class="wrapper ">
-        <div class="main-panel">
+        <div class="">
             <!-- Navbar -->
             <nav class="navbar navbar-expand-lg navbar-transparent  navbar-absolute bg-primary fixed-top">
                 <div class="container-fluid">
