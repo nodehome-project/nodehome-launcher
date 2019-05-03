@@ -79,6 +79,12 @@
 			 if(sRes['result']=="OK" && j_curANM!="") {
 				 $('#FingerC').show();
 			 }
+			 
+				if(j_curNetId=="TestNet") {
+					$('#net-name').html("TESTNET");
+				} else if(j_curNetId=="DebugNet") {
+					$('#net-name').html("DEBUGNET");
+				}
 		}
     	// NULL Compare
 		function checkNull(string) {
@@ -187,7 +193,11 @@
 			<div class="col-xs-7 col-sm-7" style="height:40px;">
 				<a href="/user/login"><img src="/images/nodehome.png" width="138" height="40" style="margin-top:10px;margin-left:5px;" /></a>
 			</div>
-			<div class="col-xs-5 col-sm-5" style="height:60px;text-align:right;">
+			<div class="col-xs-4 col-sm-4" style="height:60px;text-align:right;">
+	            <div style="margin-top:22px;margin-right:7px;font-size:10pt;color:#aaa;" id="net-name">
+	            </div>
+			</div>
+			<div class="col-xs-1 col-sm-1" style="height:60px;text-align:right;">
 	            <div style="margin-top:15px;margin-right:7px;font-size:15pt;">
 	                <i class="fas fa-ellipsis-v" onclick="onMainMenu();" style="color:#127519;"></i>
 	            </div>

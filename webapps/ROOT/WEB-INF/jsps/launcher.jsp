@@ -104,6 +104,12 @@
 			
 			Fn_initDisplay();
 			drawPageIcon();
+			 
+			if(j_curNetId=="TestNet") {
+				$('#net-name').html("TESTNET");
+			} else if(j_curNetId=="DebugNet") {
+				$('#net-name').html("DEBUGNET");
+			}
 		}
 	}
 	
@@ -567,8 +573,12 @@
 			<div class="col-xs-7 col-sm-7" style="height:40px;">
 				<a href="/launcher"><img src="/images/nodehome.png" width="138" height="40" style="margin-top:10px;margin-left:5px;" /></a>
 			</div>
-			<div class="col-xs-5 col-sm-5" style="height:60px;text-align:right;">
-	            <div style="margin-top:15px;margin-right:7px;font-size:14pt;">
+			<div class="col-xs-4 col-sm-4" style="height:60px;text-align:right;">
+	            <div style="margin-top:22px;margin-right:7px;font-size:10pt;color:#aaa;" id="net-name">
+	            </div>
+			</div>
+			<div class="col-xs-1 col-sm-1" style="height:60px;text-align:right;">
+	            <div style="margin-top:15px;margin-right:7px;font-size:14pt;"> 
 	                <i class="fas fa-ellipsis-v" onclick="onMainMenu();" style="color:#414041;"></i>
 	            </div>
 			</div>
