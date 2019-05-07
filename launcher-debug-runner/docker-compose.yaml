@@ -1,0 +1,21 @@
+version: '2'
+
+networks:
+  nodehome-net:
+    external:
+      name: nodehome-net
+
+services:
+  launcher-debug.nodehome.io:
+    container_name: launcher-debug.nodehome.io
+    image: nodehome/launcher-debug:0.1
+    working_dir: /home/webapps
+    command : /opt/tomcat/bin/catalina.sh run
+    volumes:
+    - ./config/tomcat/conf/server.xml:/opt/tomcat/conf/server.xml
+    - ./config/hosts/:/home/webapps/NodeHome-Platform-SVM/WEB-INF/hosts/
+    - ./config/globals.properties:/home/webapps/NodeHome-Platform-SVM/WEB-INF/classes/resources/props/globals.properties
+    ports:
+      - 7080:8080
+    networks:
+      - nodehome-net
