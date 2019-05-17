@@ -13,8 +13,8 @@ services:
     command : /opt/tomcat/bin/catalina.sh run
     volumes:
     - ./config/tomcat/conf/server.xml:/opt/tomcat/conf/server.xml
-    - ./config/hosts/:/home/webapps/NodeHome-Platform-SVM/WEB-INF/hosts/
-    - ./config/globals.properties:/home/webapps/NodeHome-Platform-SVM/WEB-INF/classes/resources/props/globals.properties
+    - ./config/hosts/:/home/webapps/NHLauncher-BASE/WEB-INF/hosts/
+    - ./config/globals.properties:/home/webapps/NHLauncher-BASE/WEB-INF/classes/resources/props/globals.properties
     ports:
       - 7080:8080
     networks:

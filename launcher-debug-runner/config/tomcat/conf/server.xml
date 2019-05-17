@@ -141,7 +141,7 @@
                prefix="localhost_access_log" suffix=".txt"
                pattern="%h %l %u %t &quot;%r&quot; %s %b" />
 
-                <Context docBase="/home/webapps/NodeHome-Platform-SVM" path="" reloadable="true">
+                <Context docBase="/home/webapps/NHLauncher-BASE" path="" reloadable="true">
                 </Context>
 
       </Host>
