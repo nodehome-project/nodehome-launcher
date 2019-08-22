@@ -21,12 +21,6 @@ if [ "$1" == 'start' ]; then
   cd ${script_path}/svm-service-runner
   bash docker-run.sh start
 
-  cd ${script_path}/panel-service-runner
-  bash docker-run.sh start
-
-  cd ${script_path}/explorer-service-runner
-  bash docker-run.sh start
-
 # stop
 elif [ "$1" == 'stop' ]; then
   cd ${script_path}/sns-service-runner
@@ -36,12 +30,6 @@ elif [ "$1" == 'stop' ]; then
   bash docker-run.sh stop
 
   cd ${script_path}/svm-service-runner
-  bash docker-run.sh stop
-
-  cd ${script_path}/panel-service-runner
-  bash docker-run.sh stop
-
-  cd ${script_path}/explorer-service-runner
   bash docker-run.sh stop
 
 else

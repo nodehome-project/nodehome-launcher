@@ -28,12 +28,6 @@ source ${script_path}/script/parse-options.sh
 ##          --nodehome-service-ip=127.0.0.1             nodehome service IP
 ##          --nodehome-service-port=7081                nodehome service port
 ##          --nodehome-nodem-port=18881                 nodehome nodem port
-##          --nhpanel-service-ip=127.0.0.1              nhpanel service IP
-##          --nhpanel-service-port=7082                 nhpanel service port
-##          --nhpanel-nodem-port=18882                  nhpanel nodem port
-##          --explorer-service-ip=127.0.0.1             explorer server IP
-##          --explorer-service-port=7090                explorer port
-##          --explorer-mysql-service-port=13306         explorer mysql port
 ##
 ###################################################################################################################################
 set -e
@@ -56,12 +50,6 @@ na_port=8050
 nodehome_service_ip=127.0.0.1
 nodehome_service_port=7081
 nodehome_nodem_port=18881
-nhpanel_service_ip=127.0.0.1
-nhpanel_service_port=7082
-nhpanel_nodem_port=18882
-explorer_service_ip=127.0.0.1
-explorer_service_port=7090
-explorer_mysql_service_port=13306
 man300_key=$(cat ../nodehome-blockchain/wallets/prik/man300.key | grep key | cut -d ":" -f2)
 manService_key=$(cat ../nodehome-blockchain/wallets/pubk/manService.key | grep key | cut -d ":" -f2)
 issueWallet_key=$(cat ../nodehome-blockchain/wallets/prik/issueWallet.key | grep key | cut -d ":" -f2)
@@ -96,18 +84,6 @@ jsonRet=$(../nodehome-blockchain/bin/workbench-cli -cmd=execQuery -queryType=que
 ec=$(echo ${jsonRet} | jq '.ec')
 if [ $ec -ne 0 ]; then
   jsonRet2=$(../nodehome-blockchain/bin/workbench-cli -cmd=execQuery -queryType=invoke -func=registerService -netName=${network_type} -chainID=${chain_id} -chainName=ecchain -prikFile=../nodehome-blockchain/wallets/prik/manService.key -svrURL=http://127.0.0.1:8050/chaincode_query -args="[\"PID\",\"10000\",\"nodehome\",\"{\\\"stopMessage\\\":\\\"\\\",\\\"svrVersion\\\":\\\"0.9.1\\\",\\\"service_id\\\":\\\"nodehome\\\",\\\"serviceNm\\\":\\\"nodehome\\\",\\\"state\\\":\\\"A\\\",\\\"serviceId\\\":\\\"nodehome\\\"}\"]")
-  ec2=$(echo ${jsonRet2} | jq '.ec')
-  if [ $ec2 -ne 0 ]; then
-    msg2=$(echo ${jsonRet2} | jq '.ref')
-    echo "Chaincode error($ec2) : $msg2"
-    exit 0
-  fi
-fi
-
-jsonRet=$(../nodehome-blockchain/bin/workbench-cli -cmd=execQuery -queryType=query -func=getServiceInfo -netName=${network_type} -chainID=${chain_id} -chainName=ecchain -prikFile=../nodehome-blockchain/wallets/prik/man300.key -svrURL=http://127.0.0.1:8050/chaincode_query -args="[\"PID\",\"10000\",\"nhpanel\"]")
-ec=$(echo ${jsonRet} | jq '.ec')
-if [ $ec -ne 0 ]; then
-  jsonRet2=$(../nodehome-blockchain/bin/workbench-cli -cmd=execQuery -queryType=invoke -func=registerService -netName=${network_type} -chainID=${chain_id} -chainName=ecchain -prikFile=../nodehome-blockchain/wallets/prik/manService.key -svrURL=http://127.0.0.1:8050/chaincode_query -args="[\"PID\",\"10000\",\"nhpanel\",\"{\\\"stopMessage\\\":\\\"\\\",\\\"svrVersion\\\":\\\"0.9.1\\\",\\\"service_id\\\":\\\"nhpanel\\\",\\\"serviceNm\\\":\\\"nhpanel\\\",\\\"state\\\":\\\"A\\\",\\\"serviceId\\\":\\\"nhpanel\\\"}\"]")
   ec2=$(echo ${jsonRet2} | jq '.ec')
   if [ $ec2 -ne 0 ]; then
     msg2=$(echo ${jsonRet2} | jq '.ref')
@@ -188,60 +164,6 @@ function set_config {
 
   touch ${script_path}/svm-service-runner/config/hosts/na-${chain_id}.properties
   echo "http://${na_ip}:${na_port}" >> ${script_path}/svm-service-runner/config/hosts/na-${chain_id}.properties
-
-
-  #nhpanel-service
-  sed -i "s/NHPANEL_PORT/${nhpanel_service_port}/g" ${script_path}/panel-service-runner/docker-compose.yaml
-  sed -i "s/NHPANEL_NODEM_PORT/${nhpanel_nodem_port}/g" ${script_path}/panel-service-runner/docker-compose.yaml
-
-  sed -i "s/NHPANEL_URL/${nhpanel_service_ip}:${nhpanel_service_port}/g" ${script_path}/panel-service-runner/config/props/globals.properties
-
-  touch ${script_path}/panel-service-runner/config/props/man300-${chain_id}-${network_type}.key
-  echo "//=============================" >> ${script_path}/panel-service-runner/config/props/man300-${chain_id}-${network_type}.key
-  echo "// NODEHOME KEY FILE" >> ${script_path}/panel-service-runner/config/props/man300-${chain_id}-${network_type}.key
-  echo "//=============================" >> ${script_path}/panel-service-runner/config/props/man300-${chain_id}-${network_type}.key
-  echo "ver:1.0" >> ${script_path}/panel-service-runner/config/props/man300-${chain_id}-${network_type}.key
-  echo "type:private" >> ${script_path}/panel-service-runner/config/props/man300-${chain_id}-${network_type}.key
-  echo "net:${network_type}net" >> ${script_path}/panel-service-runner/config/props/man300-${chain_id}-${network_type}.key
-  echo "key:${man300_key}" >> ${script_path}/panel-service-runner/config/props/man300-${chain_id}-${network_type}.key
-  echo "//=============================" >> ${script_path}/panel-service-runner/config/props/man300-${chain_id}-${network_type}.key
-
-  touch ${script_path}/panel-service-runner/config/hosts/host-${chain_id}.properties
-  echo "# `date +\%Y\%m\%d\%H\%M\%S`|${manService_key}|http://${seed_ip}:${seed_port}" >> ${script_path}/panel-service-runner/config/hosts/host-${chain_id}.properties
-  echo "http://${nhpanel_service_ip}:${nhpanel_service_port}|${nhpanel_service_ip}|${nhpanel_nodem_port}" >> ${script_path}/panel-service-runner/config/hosts/host-${chain_id}.properties
-
-  touch ${script_path}/panel-service-runner/config/hosts/na-${chain_id}.properties
-  echo "http://${na_ip}:${na_port}" >> ${script_path}/panel-service-runner/config/hosts/na-${chain_id}.properties
-  
-
-  #nodehome-explorer
-  sed -i "s/EXPLORER_PORT/${explorer_service_port}/g" ${script_path}/explorer-service-runner/docker-compose.yaml
-  sed -i "s/EXPLORER_MYSQL_PORT/${explorer_mysql_service_port}/g" ${script_path}/explorer-service-runner/docker-compose.yaml
-
-  sed -i "s/NETWORK_TYPE/${network_name}/g" ${script_path}/explorer-service-runner/config/props/globals.properties
-  sed -i "s/CHAIN_ID/${chain_id}/g" ${script_path}/explorer-service-runner/config/props/globals.properties
-  sed -i "s/EXPLORER_URL/${explorer_service_ip}:${explorer_service_port}/g" ${script_path}/explorer-service-runner/config/props/globals.properties
-  sed -i "s/NA_URL/${na_ip}:${na_port}/g" ${script_path}/explorer-service-runner/config/props/globals.properties
-  
-  touch ${script_path}/explorer-service-runner/config/props/man300-${chain_id}-${network_type}.key
-  echo "//=============================" >> ${script_path}/explorer-service-runner/config/props/man300-${chain_id}-${network_type}.key
-  echo "// NODEHOME KEY FILE" >> ${script_path}/explorer-service-runner/config/props/man300-${chain_id}-${network_type}.key
-  echo "//=============================" >> ${script_path}/explorer-service-runner/config/props/man300-${chain_id}-${network_type}.key
-  echo "ver:1.0" >> ${script_path}/explorer-service-runner/config/props/man300-${chain_id}-${network_type}.key
-  echo "type:private" >> ${script_path}/explorer-service-runner/config/props/man300-${chain_id}-${network_type}.key
-  echo "net:${network_type}net" >> ${script_path}/explorer-service-runner/config/props/man300-${chain_id}-${network_type}.key
-  echo "key:${man300_key}" >> ${script_path}/explorer-service-runner/config/props/man300-${chain_id}-${network_type}.key
-  echo "//=============================" >> ${script_path}/explorer-service-runner/config/props/man300-${chain_id}-${network_type}.key
-
-  touch ${script_path}/explorer-service-runner/config/props/faucet-${chain_id}-${network_type}.key
-  echo "//=============================" >> ${script_path}/explorer-service-runner/config/props/faucet-${chain_id}-${network_type}.key
-  echo "// NODEHOME KEY FILE" >> ${script_path}/explorer-service-runner/config/props/faucet-${chain_id}-${network_type}.key
-  echo "//=============================" >> ${script_path}/explorer-service-runner/config/props/faucet-${chain_id}-${network_type}.key
-  echo "ver:1.0" >> ${script_path}/explorer-service-runner/config/props/faucet-${chain_id}-${network_type}.key
-  echo "type:private" >> ${script_path}/explorer-service-runner/config/props/faucet-${chain_id}-${network_type}.key
-  echo "net:${network_type}net" >> ${script_path}/explorer-service-runner/config/props/faucet-${chain_id}-${network_type}.key
-  echo "key:${issueWallet_key}" >> ${script_path}/explorer-service-runner/config/props/faucet-${chain_id}-${network_type}.key
-  echo "//=============================" >> ${script_path}/explorer-service-runner/config/props/faucet-${chain_id}-${network_type}.key
   
 }
 
@@ -276,10 +198,6 @@ if [[ "$action" == 'run' ]]; then
     echo "nodehomeService ip '${seed_ip}' or 'localhost' not allowed"
     exit 1
   fi
-  if [ ${nhpanel_service_ip} == "127.0.0.1" ] || [ ${nhpanel_service_ip} == "localhost" ]; then
-    echo "nhPanelService ip '${seed_ip}' or 'localhost' not allowed"
-    exit 1
-  fi
   
   # runner rm
   if [ -d ${script_path}/sns-service-runner ]; then
@@ -290,12 +208,6 @@ if [[ "$action" == 'run' ]]; then
   fi
   if [ -d ${script_path}/svm-service-runner ]; then
     sudo rm -rf ${script_path}/svm-service-runner
-  fi
-  if [ -d ${script_path}/panel-service-runner ]; then
-    sudo rm -rf ${script_path}/panel-service-runner
-  fi
-  if [ -d ${script_path}/explorer-service-runner ]; then
-    sudo rm -rf ${script_path}/explorer-service-runner
   fi
   
   # runner cp
