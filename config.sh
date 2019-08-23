@@ -110,11 +110,6 @@ function set_config {
   sed -i "s/NODEHOME_NODEM_PORT/${nodehome_nodem_port}/g" ${script_path}/sns-service-runner/config/hosts/hosts-nodehome.properties
   sed -i "s/NODEHOME_NODEM_DATE/${create_date}/g" ${script_path}/sns-service-runner/config/hosts/hosts-nodehome.properties
 
-  sed -i "s/NHPANEL_IP/${nhpanel_service_ip}/g" ${script_path}/sns-service-runner/config/hosts/hosts-nhpanel.properties
-  sed -i "s/NHPANEL_URL/${nhpanel_service_ip}:${nhpanel_service_port}/g" ${script_path}/sns-service-runner/config/hosts/hosts-nhpanel.properties
-  sed -i "s/NHPANEL_NODEM_PORT/${nhpanel_nodem_port}/g" ${script_path}/sns-service-runner/config/hosts/hosts-nhpanel.properties
-  sed -i "s/NHPANEL_NODEM_DATE/${create_date}/g" ${script_path}/sns-service-runner/config/hosts/hosts-nhpanel.properties
-
 
   #launcher
   sed -i "s/LAUNCHER_PORT/${launcher_port}/g" ${script_path}/launcher-service-runner/docker-compose.yaml
