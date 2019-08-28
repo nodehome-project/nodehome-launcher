@@ -33,9 +33,9 @@ source ${script_path}/script/parse-options.sh
 set -e
 
 # Version
-nodehome=$(../nodehome-blockchain/bin/workbench-cli -cmd=execQuery -queryType=query -func=version -netName=dev -chainName=ecchain -svrURL=http://127.0.0.1:8050/chaincode_query)
-network_type=$(echo "${nodehome}" | jq --raw-output '.value.network')
-chain_id=$(echo "${nodehome}" | jq --raw-output '.value.chain_id')
+# nodehome=$(../nodehome-blockchain/bin/workbench-cli -cmd=execQuery -queryType=query -func=version -netName=dev -chainName=ecchain -svrURL=http://127.0.0.1:8050/chaincode_query)
+# network_type=$(echo "${nodehome}" | jq --raw-output '.value.network')
+# chain_id=$(echo "${nodehome}" | jq --raw-output '.value.chain_id')
 
 network_type=$(cat ../nodehome-blockchain/.config | grep network_type | cut -d "=" -f2)
 chain_id=$(cat ../nodehome-blockchain/.config | grep chain_id | cut -d "=" -f2)
@@ -51,9 +51,9 @@ nodehome_service_ip=127.0.0.1
 nodehome_service_port=7081
 nodehome_nodem_port=18881
 man300_key=$(cat ../nodehome-blockchain/wallets/prik/man300.key | grep key | cut -d ":" -f2)
-manService_key=$(cat ../nodehome-blockchain/wallets/pubk/manService.key | grep key | cut -d ":" -f2)
-issueWallet_key=$(cat ../nodehome-blockchain/wallets/prik/issueWallet.key | grep key | cut -d ":" -f2)
+manService_pubk_key=$(cat ../nodehome-blockchain/wallets/pubk/manService.key | grep key | cut -d ":" -f2)
 issueWallet_pubk_key=$(cat ../nodehome-blockchain/wallets/pubk/issueWallet.key | grep key | cut -d ":" -f2)
+issueWallet_prik_key=$(cat ../nodehome-blockchain/wallets/prik/issueWallet.key | grep key | cut -d ":" -f2)
 
 # network type
 if [ ${network_type} == "dev" ]; then
@@ -117,7 +117,7 @@ function set_config {
 
   sed -i "s/LAUNCHER_URL/${launcher_ip}:${launcher_port}/g" ${script_path}/launcher-service-runner/config/props/globals.properties
   sed -i "s/ISSUEWALLET_PUBK_KEY/${issueWallet_pubk_key}/g" ${script_path}/launcher-service-runner/config/props/globals.properties
-  sed -i "s/ISSUEWALLET_PRIK_KEY/${issueWallet_key}/g" ${script_path}/launcher-service-runner/config/props/globals.properties
+  sed -i "s/ISSUEWALLET_PRIK_KEY/${issueWallet_prik_key}/g" ${script_path}/launcher-service-runner/config/props/globals.properties
 
   touch ${script_path}/launcher-service-runner/config/props/man300-${chain_id}-${network_type}.key
   echo "//=============================" >> ${script_path}/launcher-service-runner/config/props/man300-${chain_id}-${network_type}.key
@@ -130,7 +130,7 @@ function set_config {
   echo "//=============================" >> ${script_path}/launcher-service-runner/config/props/man300-${chain_id}-${network_type}.key
 
   touch ${script_path}/launcher-service-runner/config/hosts/host-${chain_id}.properties
-  echo "# `date +\%Y\%m\%d\%H\%M\%S`|${manService_key}|http://${seed_ip}:${seed_port}" >> ${script_path}/launcher-service-runner/config/hosts/host-${chain_id}.properties
+  echo "# `date +\%Y\%m\%d\%H\%M\%S`|${manService_pubk_key}|http://${seed_ip}:${seed_port}" >> ${script_path}/launcher-service-runner/config/hosts/host-${chain_id}.properties
   echo "http://${launcher_ip}:${launcher_port}|${launcher_ip}|${launcher_nodem_port}" >> ${script_path}/launcher-service-runner/config/hosts/host-${chain_id}.properties
 
   touch ${script_path}/launcher-service-runner/config/hosts/na-${chain_id}.properties
@@ -154,7 +154,7 @@ function set_config {
   echo "//=============================" >> ${script_path}/svm-service-runner/config/props/man300-${chain_id}-${network_type}.key
 
   touch ${script_path}/svm-service-runner/config/hosts/host-${chain_id}.properties
-  echo "# `date +\%Y\%m\%d\%H\%M\%S`|${manService_key}|http://${seed_ip}:${seed_port}" >> ${script_path}/svm-service-runner/config/hosts/host-${chain_id}.properties
+  echo "# `date +\%Y\%m\%d\%H\%M\%S`|${manService_pubk_key}|http://${seed_ip}:${seed_port}" >> ${script_path}/svm-service-runner/config/hosts/host-${chain_id}.properties
   echo "http://${nodehome_service_ip}:${nodehome_service_port}|${nodehome_service_ip}|${nodehome_nodem_port}" >> ${script_path}/svm-service-runner/config/hosts/host-${chain_id}.properties
 
   touch ${script_path}/svm-service-runner/config/hosts/na-${chain_id}.properties
