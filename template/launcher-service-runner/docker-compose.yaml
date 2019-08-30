@@ -6,9 +6,9 @@ networks:
       name: nodehome-net
 
 services:
-  launcher.nodehome.io:
-    container_name: launcher.nodehome.io
-    image: nodehome/launcher:0.1
+  launcher-dev.nodehome.io:
+    container_name: launcher-dev.nodehome.io
+    image: nodehome/launcher-dev:0.1
     working_dir: /home/nodehome
     command : /usr/local/bin/service-run.sh
     volumes:

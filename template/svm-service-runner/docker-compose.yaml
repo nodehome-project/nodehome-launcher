@@ -6,9 +6,9 @@ networks:
       name: nodehome-net
 
 services:
-  svm.nodehome.io:
-    container_name: svm.nodehome.io
-    image: nodehome/svm:0.1
+  svm-dev.nodehome.io:
+    container_name: svm-dev.nodehome.io
+    image: nodehome/svm-dev:0.1
     working_dir: /home/nodehome
     command : /usr/local/bin/service-run.sh
     volumes:

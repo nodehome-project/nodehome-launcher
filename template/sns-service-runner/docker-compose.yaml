@@ -6,9 +6,9 @@ networks:
       name: nodehome-net
 
 services:
-  sns.nodehome.io:
-    container_name: sns.nodehome.io
-    image: nodehome/sns:0.1
+  sns-dev.nodehome.io:
+    container_name: sns-dev.nodehome.io
+    image: nodehome/sns-dev:0.1
     working_dir: /home/nodehome
     command : /usr/local/bin/service-run.sh
     volumes:
